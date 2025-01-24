@@ -1,0 +1,16 @@
+.sidebar {
+    width: 20%;
+    height: 100vh;
+    position: relative;
+    border-right: 1px solid #E5E5E5;
+}
+
+.sidebar img {
+    position: relative;
+    top: 10px;
+    left: 10px;
+}
+
+.menu {
+    margin-top: 3rem;
+}
