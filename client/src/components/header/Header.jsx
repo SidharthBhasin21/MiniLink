@@ -33,7 +33,15 @@ const Header = () => {
         <p>{day}</p>
 
       </div>
-      <div ></div>
+      <div className={styles.headerFunc}>
+
+        <button>+ Create New</button>
+
+        <input type='text' placeholder='search by remarks'  />
+
+        <div className={styles.avatar}>NM</div>
+
+      </div>
     </div>
   )
 }
