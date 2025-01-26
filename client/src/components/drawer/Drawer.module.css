@@ -8,6 +8,7 @@
     transition: right 0.3s ease;
     display: flex;
     flex-direction: column; /* Added this line */
+    z-index: 1000;
 }
 
 .drawer.open {

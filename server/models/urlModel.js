@@ -8,6 +8,7 @@ const UrlSchema = new mongoose.Schema({
   remarks: { type: String },
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   createdAt: { type: Date, default: Date.now },
+  clicks: { type: Number, default: 0 },
   analytics: [
     {
       timestamp: { type: Date, default: Date.now },

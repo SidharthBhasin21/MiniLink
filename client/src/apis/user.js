@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 
 
 const baseUrl = import.meta.env.VITE_BASEURL
-console.log(baseUrl);
+// console.log(baseUrl);
 export const userLoginApi = async (userData) => {
     
     try {

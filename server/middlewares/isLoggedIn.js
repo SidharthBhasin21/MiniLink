@@ -15,6 +15,7 @@ module.exports.isLoggedIn = async (req, res, next) => {
         // console.log(decoded);
         let user = await userModel.findOne({email: decoded.email}).select('-password');
         req.user = user;
+        console.log(req.user);
         next();
     } catch (error) {
         return res.status(401).json({
