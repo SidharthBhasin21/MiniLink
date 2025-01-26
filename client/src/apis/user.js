@@ -15,7 +15,7 @@ export const userLoginApi = async (userData) => {
         if(response.status === 200) {
             const {token,user} = response.data;
             localStorage.setItem('token', token);
-            toast.success( `Welcome! ${response.data.user.username}`);    
+            toast.success( `Welcome! ${response.data.user.name}`);    
             return {token, user};
         } else {
             toast.error('somthing went wrong'); 
@@ -35,7 +35,7 @@ export const userLoginApi = async (userData) => {
 export const userSignupApi = async (userData) => {
     try {
         const response = await axios.post(`${baseUrl}/auth/register`, userData);
-
+        console.log(userData)
         const { status, message } = response.data;
         if (status === 'success') {
             toast.success(message);

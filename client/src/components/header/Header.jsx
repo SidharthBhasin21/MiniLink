@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import styles from './Header.module.css'
+import Drawer from '../drawer/Drawer'
 
 const Header = () => {
   const [greeting, setGreeting] = useState('')
   const [day, setDay] = useState('')
-
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false) // Added this line
 
   const getGreeting = () => {
     const currentHour = new Date().getHours();
@@ -21,27 +22,30 @@ const Header = () => {
     return new Date().toLocaleDateString('en-US', options);
   }
 
-
   useEffect(() => {
     setGreeting(getGreeting())
     setDay(getCurrentDate())
   },[])
+
+  const toggleDrawer = () => { // Added this function
+    setIsDrawerOpen(!isDrawerOpen)
+  }
+
   return (
     <div className={styles.header}>
       <div className={styles.greeting}>
         <div>{greeting}, NAME</div>
         <p>{day}</p>
-
       </div>
       <div className={styles.headerFunc}>
-
-        <button>+ Create New</button>
-
+        <button onClick={toggleDrawer}>+ Create New</button> {/* Modified this line */}
         <input type='text' placeholder='search by remarks'  />
-
         <div className={styles.avatar}>NM</div>
-
       </div>
+      <Drawer 
+        toggleDrawer={toggleDrawer} 
+        isOpen={isDrawerOpen}  
+      /> {/* Modified this line */}
     </div>
   )
 }

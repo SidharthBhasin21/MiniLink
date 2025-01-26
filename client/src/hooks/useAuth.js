@@ -10,7 +10,7 @@ const useAuth = () => {
         const token = localStorage.getItem('token');
         if (!token) {
             toast.error('Please login to access this page');
-            navigate('/login');
+            navigate('/auth');
         } else {
             setToken(token);
         }

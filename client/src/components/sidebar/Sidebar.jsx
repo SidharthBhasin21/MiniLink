@@ -1,6 +1,7 @@
 import React from 'react'
 import styles from './Sidebar.module.css'
 import logo from '../../assets/logo.png'
+import { Link } from 'react-router-dom'
 const Sidebar = () => {
   return (
     <aside className={styles.sidebar}>
@@ -9,10 +10,24 @@ const Sidebar = () => {
         <div className={styles.menu}>
 
           <ul>
-            <li>DASHBOARD</li>
-            <li>LINKS</li>
-            <li>ANALYTICS</li>
-            <li>SETTINGS</li>
+            <li>
+              <Link to='/'>Dashboard</Link>
+            </li>
+            <li>
+              <Link to='/links'>
+                Links
+              </Link>
+            </li>
+            <li>
+              <Link to='/analytics'>
+                Analytics
+              </Link>
+            </li>
+            <li>
+              <Link to='/settings'>
+                Settings
+              </Link>
+            </li>
           </ul>
 
         </div>

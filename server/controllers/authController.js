@@ -4,9 +4,9 @@ const { generateToken } = require('../utils/generateToken');
 
 module.exports.registerUser = async (req, res) => {
     try {
-        let {email, username,phoneno, password} = req.body;
-        
-    if (!email || !username || !password || !phoneno) {
+        let {email, name,mobile, password} = req.body;
+        console.log(req.body)
+    if (!email || !name || !password || !mobile) {
         return res.status(400).json({
                 status: 'error',
                 message: 'All fields are required'
@@ -29,9 +29,9 @@ module.exports.registerUser = async (req, res) => {
             }else {
                 const user = await userModel.create({
                     email,
-                    username,
+                    name,
                     password: hash,
-                    phoneno
+                    mobile
                 });
 
                 const token = generateToken(user);
@@ -114,12 +114,12 @@ module.exports.logoutUser = async (req, res) => {
 //     try {
         
 //         const userId = req.user._id;
-//         const { username, email, oldPassword, newPassword } = req.body;
+//         const { name, email, oldPassword, newPassword } = req.body;
 //         const userdata = await userModel.findOne({ _id: userId });
         
 //         if (userdata) {
 //             const updatedata = {};
-//             if (username) updatedata.username = username;
+//             if (name) updatedata.name = name;
 //             if (email.length > 0) {
 //                 if (await userModel.findOne({ email: email })) {
 //                     return res.status(409).json({ 

@@ -1,18 +1,17 @@
-import React from 'react'
-import Sidebar from '../../components/sidebar/Sidebar'
-import Header from '../../components/header/Header'
+import React, { useEffect } from 'react'
 import styles from './Dashboard.module.css'
+import useAuth from '../../hooks/useAuth'
+
 const Dashboard = () => {
+  const token = useAuth()
+
+  useEffect(() => {
+  },[])
+  
   return (
     
     <main className={styles.dashboard}>
-      <Sidebar />
-      <div className={styles.main}>
-        <Header />
-        <div className={styles.pages}>
-          asdsa
-        </div>
-      </div>
+      DASHBOARD
     </main>
   )
 }
