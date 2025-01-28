@@ -70,7 +70,7 @@ module.exports.loginUser = async (req, res) => {
             throw new Error('All fields are required');
         }
         const user = await userModel.findOne({ email })
-
+        console.log(user)
         if (!user) {
             return res.status(404).json({
                 status: 'error',

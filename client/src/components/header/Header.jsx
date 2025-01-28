@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import styles from './Header.module.css'
 import Drawer from '../drawer/Drawer'
+import { useSelector } from 'react-redux'
 
 const Header = () => {
+
   const [greeting, setGreeting] = useState('')
   const [day, setDay] = useState('')
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false) // Added this line
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+
+  const {name , email} = useSelector(state => state.auth)
 
   const getGreeting = () => {
     const currentHour = new Date().getHours();
@@ -34,13 +38,13 @@ const Header = () => {
   return (
     <div className={styles.header}>
       <div className={styles.greeting}>
-        <div>{greeting}, NAME</div>
+        <div>{greeting}, {name}</div>
         <p>{day}</p>
       </div>
       <div className={styles.headerFunc}>
         <button onClick={toggleDrawer}>+ Create New</button> {/* Modified this line */}
         <input type='text' placeholder='search by remarks'  />
-        <div className={styles.avatar}>NM</div>
+        <div className={styles.avatar}>{name && name.slice(0,2).toUpperCase()}</div>
       </div>
       <Drawer 
         toggleDrawer={toggleDrawer} 

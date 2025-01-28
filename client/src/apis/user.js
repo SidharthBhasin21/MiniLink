@@ -14,6 +14,7 @@ export const userLoginApi = async (userData) => {
         console.log(response);
         if(response.status === 200) {
             const {token,user} = response.data;
+            console.log(user)
             localStorage.setItem('token', token);
             toast.success( `Welcome! ${response.data.user.name}`);    
             return {token, user};

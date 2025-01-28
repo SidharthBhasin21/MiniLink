@@ -2,8 +2,12 @@ import React, { useState } from 'react'
 import styles from './auth.module.css'
 import { userLoginApi } from '../../apis/user';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { login } from '../../store/slices/authSlice';
 const Login = ({handlesignup}) => {
   const navigate = useNavigate()
+  const dispatch = useDispatch()
+
   const [input, setinput] = useState({
     email: '',
     password: ''
@@ -26,6 +30,7 @@ const Login = ({handlesignup}) => {
     const {token , user} = await userLoginApi(input)
     if(token) {
       navigate('/')
+      dispatch(login(user));
     }
   }
   
