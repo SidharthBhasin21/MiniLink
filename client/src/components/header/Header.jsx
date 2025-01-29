@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import styles from './Header.module.css'
 import Drawer from '../drawer/Drawer'
-import { useSelector } from 'react-redux'
+import { createLink } from '../../apis/url'
 
 const Header = () => {
 
   const [greeting, setGreeting] = useState('')
   const [day, setDay] = useState('')
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  const [name, setName] = useState('')
 
-  const {name , email} = useSelector(state => state.auth)
 
   const getGreeting = () => {
     const currentHour = new Date().getHours();
@@ -26,9 +26,19 @@ const Header = () => {
     return new Date().toLocaleDateString('en-US', options);
   }
 
+  const createNewLink = async ( data ) => {
+    
+    const res =  await createLink(data)
+    console.log(res)
+    return res
+  }
+
+
   useEffect(() => {
     setGreeting(getGreeting())
     setDay(getCurrentDate())
+    setName(localStorage.getItem('name'))
+    
   },[])
 
   const toggleDrawer = () => { // Added this function
@@ -42,14 +52,16 @@ const Header = () => {
         <p>{day}</p>
       </div>
       <div className={styles.headerFunc}>
-        <button onClick={toggleDrawer}>+ Create New</button> {/* Modified this line */}
+        <button onClick={toggleDrawer}>+ Create New</button> 
         <input type='text' placeholder='search by remarks'  />
-        <div className={styles.avatar}>{name && name.slice(0,2).toUpperCase()}</div>
+        <div className={styles.avatar}>{name ?  name.slice(0,2).toUpperCase(): ""}</div>
       </div>
       <Drawer 
+        heading='New Link'
         toggleDrawer={toggleDrawer} 
-        isOpen={isDrawerOpen}  
-      /> {/* Modified this line */}
+        isOpen={isDrawerOpen}
+        createNewLink={createNewLink}
+      /> 
     </div>
   )
 }

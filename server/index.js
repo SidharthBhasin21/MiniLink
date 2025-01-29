@@ -6,17 +6,19 @@ const PORT = process.env.PORT || 3000;
 const db = require("./config/db");
 db();
 const app = express();
+const device = require('express-device');
 
 const userRouter = require("./routes/userRouter")
 const urlRouter = require("./routes/urlRouter")
 
 app.use(cors({
-    origin: 'http://localhost:5173', // Replace with your frontend's URL
-    credentials: true, // Allow credentials (cookies, auth headers, etc.)
-  })); 
+    origin: 'http://localhost:5173',
+    credentials: true,
+}));
 app.use(express.json());
 app.use(cookieParser())
 app.use(express.urlencoded({extended: true}));
+app.use(device.capture());
 
 app.get('/', (req, res) => {
     res.json({

@@ -1,16 +1,22 @@
 const Link = require("../models/urlModel")
 const shortid = require("shortid");
+const useragent = require("useragent");
 
 
 module.exports.createUrl = async (req, res) => {
     const { destinationUrl, remarks, expirationDate } = req.body;
-    console.log(req.body)
+    // console.log(req.body)
 
-
-    if (!destinationUrl) {
+    if (!destinationUrl ) {
         return res.status(400).json({
             status: 'error',
             message: "Destination URL is required."
+        });
+    }
+    if (!remarks ) {
+        return res.status(400).json({
+            status: 'error',
+            message: "remarks is required."
         });
     }
 
@@ -159,7 +165,8 @@ module.exports.getAllUrls = async (req, res) => {
 
 module.exports.redirectToOriginalUrl = async (req, res) => {
     const { shortUrl } = req.params;
-    console.log("Received short URL:", shortUrl); 
+    console.log(req.ip);
+    // console.log("Received short URL:", shortUrl); 
     try {
         const link = await Link.findOne({ shortUrl });
         console.log("Found link:", link);
@@ -179,14 +186,15 @@ module.exports.redirectToOriginalUrl = async (req, res) => {
 
         const clickMetadata = {
             timestamp: new Date(),
-            ipAddress: req.ip, 
-            userAgent: req.headers['user-agent'],
+            ip: req.ip, 
+            userAgent: req.device.type,
         };
+        console.log(clickMetadata)
 
         link.clicks += 1;
         link.analytics.push(clickMetadata);
         await link.save();
-        console.log("Redirecting to:", link.destinationUrl);
+        // console.log("Redirecting to:", link.destinationUrl);
         res.redirect(link.destinationUrl);
 
     } catch (err) {
@@ -198,4 +206,116 @@ module.exports.redirectToOriginalUrl = async (req, res) => {
         });
     }
 };
+
+module.exports.dashboard = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        // console.log(req)
+        const urls = await Link.find({ userId });
+
+        let totalClicks = 0;
+        const dateWiseClicks = {};
+        const deviceTypeClicks = {
+            desktop: 0,
+            mobile: 0,
+            tablet: 0,
+        };
+
+        if (!urls.length) {
+            return res.status(202).json({ 
+                status: 'error',
+                message: "No URLs found for the user.",
+                totalClicks,
+                dateWiseClicks,
+                deviceTypeClicks,
+            });
+        }
+
+        
+        urls.forEach((url) => {
+            totalClicks += url.clicks;
+
+            url.analytics.forEach((entry) => {
+                const date = entry.timestamp.toISOString().split("T")[0]; 
+
+                if (!dateWiseClicks[date]) {
+                    dateWiseClicks[date] = 0;
+                }
+                dateWiseClicks[date] += 1;
+
+                const userAgent = entry.userAgent.toLowerCase();
+                if (userAgent.includes("mobile")) {
+                    deviceTypeClicks.mobile += 1;
+                } else if (userAgent.includes("tablet")) {
+                    deviceTypeClicks.tablet += 1;
+                } else {
+                    deviceTypeClicks.desktop += 1;
+                }
+            });
+        });
+
+        res.status(200).json({
+            totalClicks,
+            dateWiseClicks,
+            deviceTypeClicks,
+        });
+    } catch (error) {
+        console.error("Error fetching analytics:", error.message);
+        res.status(500).json({ 
+            status: 'error',
+            message: "Internal server error."
+        });
+    }
+} 
+
+module.exports.getAllAnalytics = async (req, res) => {
+    try {
+        const userId = req.user.id; // Ensure the user is authenticated
+
+        // Find all URLs created by the logged-in user
+        const urls = await Link.find({ userId });
+
+        function formatDate(isoString) {
+            const date = new Date(isoString);
+            
+            const options = { 
+                month: "short", 
+                day: "2-digit", 
+                year: "numeric", 
+                hour: "2-digit", 
+                minute: "2-digit", 
+                hour12: false 
+            };
+        
+            return date.toLocaleString("en-US", options).replace(",", "");
+        }
+
+        if (!urls.length) {
+            return res.status(404).json({ message: "No URLs found for the user." });
+        }
+
+        let analyticsData = [];
+
+        urls.forEach((url) => {
+            url.analytics.forEach((entry) => {
+                const agent = useragent.parse(entry.userAgent); // Parse user agent
+                console.log(entry)
+                analyticsData.push({
+                    timestamp: formatDate(entry.timestamp),
+                    destinationUrl: url.destinationUrl,
+                    shortUrl: url.shortUrl,
+                    ipAddress: entry.ip,
+                    userOS: agent.os.toString(), // Extract OS from user agent
+                });
+            });
+        });
+
+        // Return analytics data
+        res.status(200).json({ analytics: analyticsData });
+    } catch (error) {
+        console.error("Error fetching analytics:", error.message);
+        res.status(500).json({ error: "Internal server error." });
+    }
+};
+
 

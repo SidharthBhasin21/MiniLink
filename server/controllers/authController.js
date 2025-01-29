@@ -1,4 +1,6 @@
 const userModel = require('../models/userModel');
+const Url = require("../models/urlModel");
+
 const bcrypt = require('bcrypt');
 const { generateToken } = require('../utils/generateToken');
 
@@ -110,6 +112,7 @@ module.exports.logoutUser = async (req, res) => {
     }
 }
 
+
 // module.exports.updateUser = async (req, res) => {
 //     try {
         
@@ -165,3 +168,32 @@ module.exports.logoutUser = async (req, res) => {
 //         }   
 //     }
 // }
+
+module.exports.deleteAccount = async (req, res) => {
+    try {
+        // Get the logged-in user's ID from `req.user` (set by middleware)
+        const userId = req.user.id;
+
+        // Find and delete all URLs associated with the user
+        await Url.deleteMany({ userId: userId });
+
+        // Delete the user account
+        const user = await userModel.findByIdAndDelete(userId);
+
+        if (!user) {
+            return res.status(404).json({ 
+                status: "error",
+                message: "User not found."
+            });
+        }
+
+        res.status(200).json({
+            status: "success",
+            message: "Account deleted successfully, along with all associated data.",
+        });
+    } catch (error) {
+        console.error("Error deleting account:", error.message);
+        res.status(500).json({ error: "Internal server error." });
+    }
+};
+

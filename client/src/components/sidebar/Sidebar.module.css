@@ -4,7 +4,6 @@
     position: relative;
     border-right: 1px solid #E5E5E5;
     padding: 1rem;
-    background-color: aqua;
 }
 
 .sidebar img {
@@ -43,4 +42,4 @@
 
 .menu ul li:hover a {
     color: var(--primary-color);
-  }
+}
