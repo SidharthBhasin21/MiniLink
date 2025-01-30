@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import styles from './Header.module.css'
 import Drawer from '../drawer/Drawer'
-import { createLink } from '../../apis/url'
+import { createLink, searchUrl } from '../../apis/url' // Added searchUrl import
 import { useNavigate } from 'react-router-dom'
+import { setSearchQuery } from '../../store/slices/searchSlice'
+import { useDispatch } from 'react-redux'
 
 const Header = () => {
 
@@ -10,11 +12,10 @@ const Header = () => {
   const [day, setDay] = useState('')
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const [name, setName] = useState('')
-  const [searchQuery,setSearchQuery] = useState('');
+  const [searchQuery, setSearchQueryLocal] = useState('');
 
+  const dispatch = useDispatch();
   const navigation = useNavigate()
-
-
 
   const getGreeting = () => {
     const currentHour = new Date().getHours();
@@ -32,25 +33,32 @@ const Header = () => {
   }
 
   const createNewLink = async ( data ) => {
-    
     const res =  await createLink(data)
     console.log(res)
     return res
   }
-  const handleSearch = (e) => {
-    setSearchQuery(e.target.value)
+
+  const handleSearch = async (e) => { 
+    const query = e.target.value// Modified this function
+    setSearchQueryLocal(query)
+    if (query) {
+      const results = await searchUrl(query);
+      console.log(results)
+      dispatch(setSearchQuery({ query, results }));  // Store in Redux
+    } else {
+      dispatch(setSearchQuery({ query: '', results: [] })); // Clear search
+    }
+
     navigation('/links')
   }
-
 
   useEffect(() => {
     setGreeting(getGreeting())
     setDay(getCurrentDate())
     setName(localStorage.getItem('name'))
-    
   },[])
 
-  const toggleDrawer = () => { // Added this function
+  const toggleDrawer = () => {
     setIsDrawerOpen(!isDrawerOpen)
   }
 

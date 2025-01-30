@@ -4,10 +4,14 @@ import './index.css'
 import App from './App.jsx'
 import { BrowserRouter } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
+import { Provider } from 'react-redux';
+import { store } from './store/store.js'
 
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
+    <Provider store={store}>
+
     <BrowserRouter>
       <App />
       <ToastContainer 
@@ -20,5 +24,6 @@ createRoot(document.getElementById('root')).render(
         pauseOnHover
         />
     </BrowserRouter>
+        </Provider>
   </StrictMode>,
 )

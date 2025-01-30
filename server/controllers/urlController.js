@@ -135,7 +135,8 @@ module.exports.deleteUrl = async (req, res) => {
     }
 }
 module.exports.getAllUrls = async (req, res) => {
-    const { page = 1, limit = 10 } = req.query;
+    const { page = 1, limit = 9 } = req.query;
+    console.log(req.query)
     try {
         const urls = await Link.find({ userId: req.user.id })
             .sort({ createdAt: -1 })
@@ -320,7 +321,34 @@ module.exports.getAllAnalytics = async (req, res) => {
 };
 
 module.exports.getSearchUrl = async (req, res) => {
-    
+    const { searchQuery } = req.params;
+    const userId = req.user.id;
+
+    try {
+        const urls = await Link.find({
+            userId,
+            remarks: { $regex: searchQuery, $options: 'i' } // Case-insensitive search
+        });
+
+        if (!urls.length) {
+            return res.status(404).json({
+                status: 'error',
+                message: "No URLs found matching the search query.",
+            });
+        }
+
+        return res.status(200).json({
+            status: 'success',
+            message: "URLs fetched successfully.",
+            data: urls,
+        });
+    } catch (err) {
+        console.error("Error fetching search results:", err);
+        return res.status(500).json({
+            status: 'error',
+            message: "An error occurred while fetching the search results. Please try again later.",
+        });
+    }
 }
 
 

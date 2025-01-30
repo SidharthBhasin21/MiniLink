@@ -1,41 +1,46 @@
 import React, { useEffect, useState } from "react";
 import styles from "./Links.module.css";
-import { getAllLinks, deleteLink, editLink } from "../../apis/url"; // Added editLink import
+import { deleteLink, getAllLinks, editLink } from "../../apis/url"; // Added editLink import
 import { toast } from "react-toastify";
 import Drawer from "../../components/drawer/Drawer";
 import Modal from "../../components/Modal/Modal";
+import { useSelector } from "react-redux";
 
 const Links = () => {
   const baseUrl = import.meta.env.VITE_BASEURL;
+  const { query, results } = useSelector((state) => state.search);
 
   const [links, setLinks] = useState([]);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedId, setSelectedId] = useState(null); // Added this line
+  const [selectedId, setSelectedId] = useState(null);
   const [selectedLink, setSelectedLink] = useState(null); // Added this line
+  const [currentPage, setCurrentPage] = useState(1); // Added this line
+  const [totalPages, setTotalPages] = useState(1); // Added this line
 
-  const getLinks = async () => {
-    const data = await getAllLinks();
+  const getLinks = async (page = 1) => { // Modified this function
+    const data = await getAllLinks(page);
     setLinks(data?.data?.data.urls);
+    setTotalPages(data?.data?.data.pagination.totalPages); // Set total pages
     console.log(data.data.data.urls);
   };
 
   const deleteUrl = async (id) => {
     const data = await deleteLink(id);
     console.log(data);
-    getLinks(); // Refresh the links after deletion
+    getLinks(currentPage); // Refresh the links after deletion
   }
 
   const handleSortByDate = () => {};
 
   const handleSortByStatus = () => {};
 
-  const handleDeleteClick = (id) => { // Modified this line
-    setSelectedId(id); // Set the selected id
+  const handleDeleteClick = (id) => {
+    setSelectedId(id);
     setIsModalOpen(true);
   };
 
-  const handleEditClick = (row) => {
+  const handleEditClick = (row) => { // Modified this function
     setSelectedLink(row); // Set the selected link
     toggleDrawer();
   };
@@ -49,9 +54,18 @@ const Links = () => {
     setIsDrawerOpen(!isDrawerOpen);
   };
 
+  const handlePageChange = (page) => { // Modified this function
+    setCurrentPage(page);
+    getLinks(page);
+  };
+
   useEffect(() => {
-    getLinks();
-  }, [isDrawerOpen]);
+    if(query.length > 0){
+      setLinks(results)
+    } else {
+      getLinks(currentPage);
+    }
+  }, [query,results, isModalOpen, isDrawerOpen, currentPage]);
 
   return (
     <div className={styles.linksContainer}>
@@ -86,64 +100,69 @@ const Links = () => {
           </tr>
         </thead>
         <tbody>
-          {
-          links.length ? 
-            links.map((row, index) => (
-              <tr key={row._id}>
-                <td>{row.createdAt.toString().split("T")[0]}</td>
-                <td>{row.destinationUrl.slice(0,25)}</td>
-                <td>
-                  {`${baseUrl}/url/${row.shortUrl}`.slice(0, 12)}
+          {links?.map((row, index) => (
+            <tr key={row._id}>
+              <td>{row.createdAt.toString().split("T")[0]}</td>
+              <td>{row.destinationUrl.slice(0,25)}</td>
+              <td>
+                {`${baseUrl}/url/${row.shortUrl}`.slice(0, 12)}
+                <img
+                  src="/copy.png"
+                  alt="copy"
+                  className={styles.copyIcon}
+                  onClick={() => handleCopyClick(row.shortUrl)}
+                />
+              </td>
+              <td>{row.remarks}</td>
+              <td>{row.clicks}</td>
+              <td className={styles.inactive}>active</td>
+              <td>
+                <button
+                  className={styles.editBtn}
+                  onClick={() => handleEditClick(row)} // Modified this line
+                >
+                  <img src="/edit.png" alt="edit" className={styles.editIcon} />
+                </button>
+                <button
+                  className={styles.deleteBtn}
+                  onClick={() => handleDeleteClick(row._id)} // Modified this line
+                >
                   <img
-                    src="/copy.png"
-                    alt="copy"
-                    className={styles.copyIcon}
-                    onClick={() => handleCopyClick(row.shortUrl)}
+                    src="/bin.png"
+                    alt="Delete"
+                    className={styles.deleteIcon}
                   />
-                </td>
-                <td>{row.remarks}</td>
-                <td>{row.clicks}</td>
-                <td className={styles.inactive}>active</td>
-                <td>
-                  <button
-                    className={styles.editBtn}
-                    onClick={() => handleEditClick(row)}
-                  >
-                    <img src="/edit.png" alt="edit" className={styles.editIcon} />
-                  </button>
-                  <button
-                    className={styles.deleteBtn}
-                    onClick={() => handleDeleteClick(row._id)} // Modified this line
-                  >
-                    <img
-                      src="/bin.png"
-                      alt="Delete"
-                      className={styles.deleteIcon}
-                    />
-                  </button>
-                </td>
-              </tr>
-            )) 
-            : <tr>
-            <td colSpan="7" style={{ textAlign: "center" }}>
-              No data found.
-            </td></tr>
-        }
+                </button>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
 
+      <div className={styles.pagination}> {/* Added this block */}
+        {Array.from({ length: totalPages }, (_, index) => (
+          <button
+            key={index}
+            className={`${styles.pageButton} ${currentPage === index + 1 ? styles.activePage : ''}`}
+            onClick={() => handlePageChange(index + 1)}
+          >
+            {index + 1}
+          </button>
+        ))}
+      </div>
+
       <Drawer
-        heading={selectedLink ? "Edit Link" : "New Link"} // Modified this line
+        heading={selectedLink ? "Edit Link" : "New Link"}
         toggleDrawer={toggleDrawer}
         isOpen={isDrawerOpen}
-        data={selectedLink} // Added this line
-        editLink={editLink} // Added this line
+        data={selectedLink}
+        editLink={editLink}
       />
 
       {isModalOpen && <Modal 
         setIsModalOpen={setIsModalOpen}
         deleteUrl={deleteUrl}
-        id={selectedId} // Added this line
+        id={selectedId}
       />}
     </div>
   );

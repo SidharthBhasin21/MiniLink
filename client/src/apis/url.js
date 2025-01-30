@@ -23,24 +23,27 @@ export const createLink = async (data) => {
     }
 }
 
-export const getAllLinks = async () => {
+export const getAllLinks = async (page = 1) => { // Modified this function
     try {
-        const data = await axios.get(`${baseUrl}/url/all`, {
+        const data = await axios.get(`${baseUrl}/url/all?page=${page}`, {
             withCredentials: true,
         });
         console.log(data);
         return data;
 
     } catch (error) {
-        
+        toast.error(error?.response?.data?.message)
+        console.log(error)
+        return;
     }
 }
+
 export const getDashboard = async ()=> {
     try {
         const data = await axios.get(`${baseUrl}/url/dashboard`,{
             withCredentials: true,
         })
-        console.log(data)
+        // console.log(data)
         if(data.status === 200){
             return data.data
         } else {
@@ -48,7 +51,6 @@ export const getDashboard = async ()=> {
             return data
         }
     } catch (error) {
-
         toast.error(error?.response?.data?.message)
     }
 }
@@ -72,7 +74,7 @@ export const deleteLink = async (id) => {
     }
 }
 
-export const editLink = async (id, data) => { // Added this function
+export const editLink = async (id, data) => {
     try {
         const response = await axios.put(`${baseUrl}/url/edit/${id}`, data, {
             withCredentials: true,
@@ -103,6 +105,24 @@ export const getAnalytics = async () => {
         toast.error(error?.response?.data?.message)
         console.log(error)
         return;
+    }
+}
+
+export const searchUrl = async (searchQuery) => {
+    try {
+        const response = await axios.get(`${baseUrl}/url/search/${searchQuery}`, {
+            withCredentials: true,
+        });
+        if(response.data.status == "success"){
+            return response.data.data;
+        } else {
+            toast.error(response.data.message);
+            return [];
+        }
+    } catch (error) {
+        toast.error(error?.response?.data?.message);
+        console.log(error);
+        return [];
     }
 }
 
