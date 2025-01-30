@@ -86,42 +86,49 @@ const Links = () => {
           </tr>
         </thead>
         <tbody>
-          {links?.map((row, index) => (
-            <tr key={row._id}>
-              <td>{row.createdAt.toString().split("T")[0]}</td>
-              <td>{row.destinationUrl.slice(0,25)}</td>
-              <td>
-                {`${baseUrl}/url/${row.shortUrl}`.slice(0, 12)}
-                <img
-                  src="/copy.png"
-                  alt="copy"
-                  className={styles.copyIcon}
-                  onClick={() => handleCopyClick(row.shortUrl)}
-                />
-              </td>
-              <td>{row.remarks}</td>
-              <td>{row.clicks}</td>
-              <td className={styles.inactive}>active</td>
-              <td>
-                <button
-                  className={styles.editBtn}
-                  onClick={() => handleEditClick(row)}
-                >
-                  <img src="/edit.png" alt="edit" className={styles.editIcon} />
-                </button>
-                <button
-                  className={styles.deleteBtn}
-                  onClick={() => handleDeleteClick(row._id)} // Modified this line
-                >
+          {
+          links.length ? 
+            links.map((row, index) => (
+              <tr key={row._id}>
+                <td>{row.createdAt.toString().split("T")[0]}</td>
+                <td>{row.destinationUrl.slice(0,25)}</td>
+                <td>
+                  {`${baseUrl}/url/${row.shortUrl}`.slice(0, 12)}
                   <img
-                    src="/bin.png"
-                    alt="Delete"
-                    className={styles.deleteIcon}
+                    src="/copy.png"
+                    alt="copy"
+                    className={styles.copyIcon}
+                    onClick={() => handleCopyClick(row.shortUrl)}
                   />
-                </button>
-              </td>
-            </tr>
-          ))}
+                </td>
+                <td>{row.remarks}</td>
+                <td>{row.clicks}</td>
+                <td className={styles.inactive}>active</td>
+                <td>
+                  <button
+                    className={styles.editBtn}
+                    onClick={() => handleEditClick(row)}
+                  >
+                    <img src="/edit.png" alt="edit" className={styles.editIcon} />
+                  </button>
+                  <button
+                    className={styles.deleteBtn}
+                    onClick={() => handleDeleteClick(row._id)} // Modified this line
+                  >
+                    <img
+                      src="/bin.png"
+                      alt="Delete"
+                      className={styles.deleteIcon}
+                    />
+                  </button>
+                </td>
+              </tr>
+            )) 
+            : <tr>
+            <td colSpan="7" style={{ textAlign: "center" }}>
+              No data found.
+            </td></tr>
+        }
         </tbody>
       </table>
 

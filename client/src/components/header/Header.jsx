@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import styles from './Header.module.css'
 import Drawer from '../drawer/Drawer'
 import { createLink } from '../../apis/url'
+import { useNavigate } from 'react-router-dom'
 
 const Header = () => {
 
@@ -9,6 +10,10 @@ const Header = () => {
   const [day, setDay] = useState('')
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const [name, setName] = useState('')
+  const [searchQuery,setSearchQuery] = useState('');
+
+  const navigation = useNavigate()
+
 
 
   const getGreeting = () => {
@@ -32,6 +37,10 @@ const Header = () => {
     console.log(res)
     return res
   }
+  const handleSearch = (e) => {
+    setSearchQuery(e.target.value)
+    navigation('/links')
+  }
 
 
   useEffect(() => {
@@ -53,7 +62,12 @@ const Header = () => {
       </div>
       <div className={styles.headerFunc}>
         <button onClick={toggleDrawer}>+ Create New</button> 
-        <input type='text' placeholder='search by remarks'  />
+        <input 
+          type='text' 
+          placeholder='search by remarks'  
+          value={searchQuery}
+          onChange={handleSearch}
+        />
         <div className={styles.avatar}>{name ?  name.slice(0,2).toUpperCase(): ""}</div>
       </div>
       <Drawer 

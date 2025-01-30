@@ -187,6 +187,7 @@ module.exports.redirectToOriginalUrl = async (req, res) => {
         const clickMetadata = {
             timestamp: new Date(),
             ip: req.ip, 
+            os: req.headers["user-agent"],
             userAgent: req.device.type,
         };
         console.log(clickMetadata)
@@ -244,7 +245,7 @@ module.exports.dashboard = async (req, res) => {
                 dateWiseClicks[date] += 1;
 
                 const userAgent = entry.userAgent.toLowerCase();
-                if (userAgent.includes("mobile")) {
+                if (userAgent.includes("phone")) {
                     deviceTypeClicks.mobile += 1;
                 } else if (userAgent.includes("tablet")) {
                     deviceTypeClicks.tablet += 1;
@@ -298,8 +299,8 @@ module.exports.getAllAnalytics = async (req, res) => {
 
         urls.forEach((url) => {
             url.analytics.forEach((entry) => {
-                const agent = useragent.parse(entry.userAgent); // Parse user agent
                 console.log(entry)
+                const agent = useragent.parse(entry.os); // Parse user agent
                 analyticsData.push({
                     timestamp: formatDate(entry.timestamp),
                     destinationUrl: url.destinationUrl,
