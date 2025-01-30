@@ -18,7 +18,8 @@ const Links = () => {
   const [currentPage, setCurrentPage] = useState(1); // Added this line
   const [totalPages, setTotalPages] = useState(1); // Added this line
 
-  const getLinks = async (page = 1) => { // Modified this function
+  const getLinks = async (page = 1) => {
+    // Modified this function
     const data = await getAllLinks(page);
     setLinks(data?.data?.data.urls);
     setTotalPages(data?.data?.data.pagination.totalPages); // Set total pages
@@ -29,7 +30,7 @@ const Links = () => {
     const data = await deleteLink(id);
     console.log(data);
     getLinks(currentPage); // Refresh the links after deletion
-  }
+  };
 
   const handleSortByDate = () => {};
 
@@ -40,7 +41,8 @@ const Links = () => {
     setIsModalOpen(true);
   };
 
-  const handleEditClick = (row) => { // Modified this function
+  const handleEditClick = (row) => {
+    // Modified this function
     setSelectedLink(row); // Set the selected link
     toggleDrawer();
   };
@@ -53,19 +55,26 @@ const Links = () => {
   const toggleDrawer = () => {
     setIsDrawerOpen(!isDrawerOpen);
   };
+  const getStatus = (expirationdate) => {
+    const currentDate = new Date();
+    const expiryDate = expirationdate ? new Date(expirationdate) : null;
 
-  const handlePageChange = (page) => { // Modified this function
+    return !expiryDate || expiryDate > currentDate ? "Active" : "Inactive";
+  };
+
+  const handlePageChange = (page) => {
+    // Modified this function
     setCurrentPage(page);
     getLinks(page);
   };
 
   useEffect(() => {
-    if(query.length > 0){
-      setLinks(results)
+    if (query.length > 0) {
+      setLinks(results);
     } else {
       getLinks(currentPage);
     }
-  }, [query,results, isModalOpen, isDrawerOpen, currentPage]);
+  }, [query, results, isModalOpen, isDrawerOpen, currentPage]);
 
   return (
     <div className={styles.linksContainer}>
@@ -103,7 +112,7 @@ const Links = () => {
           {links?.map((row, index) => (
             <tr key={row._id}>
               <td>{row.createdAt.toString().split("T")[0]}</td>
-              <td>{row.destinationUrl.slice(0,25)}</td>
+              <td>{row.destinationUrl.slice(0, 25)}</td>
               <td>
                 {`${baseUrl}/url/${row.shortUrl}`.slice(0, 12)}
                 <img
@@ -115,7 +124,15 @@ const Links = () => {
               </td>
               <td>{row.remarks}</td>
               <td>{row.clicks}</td>
-              <td className={styles.inactive}>active</td>
+              <td
+                className={
+                  getStatus(row.expirationDate) === "Active"
+                    ? styles.active
+                    : styles.inactive
+                }
+              >
+                {getStatus(row.expirationDate)}
+              </td>
               <td>
                 <button
                   className={styles.editBtn}
@@ -139,11 +156,15 @@ const Links = () => {
         </tbody>
       </table>
 
-      <div className={styles.pagination}> {/* Added this block */}
+      <div className={styles.pagination}>
+        {" "}
+        {/* Added this block */}
         {Array.from({ length: totalPages }, (_, index) => (
           <button
             key={index}
-            className={`${styles.pageButton} ${currentPage === index + 1 ? styles.activePage : ''}`}
+            className={`${styles.pageButton} ${
+              currentPage === index + 1 ? styles.activePage : ""
+            }`}
             onClick={() => handlePageChange(index + 1)}
           >
             {index + 1}
@@ -159,11 +180,13 @@ const Links = () => {
         editLink={editLink}
       />
 
-      {isModalOpen && <Modal 
-        setIsModalOpen={setIsModalOpen}
-        deleteUrl={deleteUrl}
-        id={selectedId}
-      />}
+      {isModalOpen && (
+        <Modal
+          setIsModalOpen={setIsModalOpen}
+          deleteUrl={deleteUrl}
+          id={selectedId}
+        />
+      )}
     </div>
   );
 };

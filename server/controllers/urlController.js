@@ -271,6 +271,7 @@ module.exports.dashboard = async (req, res) => {
 } 
 
 module.exports.getAllAnalytics = async (req, res) => {
+    const { page = 1, limit = 10 } = req.query; // Added pagination parameters
     try {
         const userId = req.user.id; // Ensure the user is authenticated
 
@@ -312,8 +313,20 @@ module.exports.getAllAnalytics = async (req, res) => {
             });
         });
 
+        // Pagination logic
+        const startIndex = (page - 1) * limit;
+        const endIndex = page * limit;
+        const paginatedData = analyticsData.slice(startIndex, endIndex);
+
         // Return analytics data
-        res.status(200).json({ analytics: analyticsData });
+        res.status(200).json({ 
+            analytics: paginatedData,
+            pagination: {
+                totalItems: analyticsData.length,
+                currentPage: parseInt(page),
+                totalPages: Math.ceil(analyticsData.length / limit),
+            }
+        });
     } catch (error) {
         console.error("Error fetching analytics:", error.message);
         res.status(500).json({ error: "Internal server error." });

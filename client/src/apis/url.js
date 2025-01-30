@@ -23,7 +23,7 @@ export const createLink = async (data) => {
     }
 }
 
-export const getAllLinks = async (page = 1) => { // Modified this function
+export const getAllLinks = async (page = 1) => {
     try {
         const data = await axios.get(`${baseUrl}/url/all?page=${page}`, {
             withCredentials: true,
@@ -93,9 +93,9 @@ export const editLink = async (id, data) => {
     }
 }
 
-export const getAnalytics = async () => {
+export const getAnalytics = async (page = 1) => {
     try {
-        const data = await axios.get(`${baseUrl}/url/analytics`, {
+        const data = await axios.get(`${baseUrl}/url/analytics?page=${page}`, {
             withCredentials: true,
         });
         console.log(data);

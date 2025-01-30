@@ -35,3 +35,23 @@
 .table tr:hover {
     background-color: #f9f9f9;
 }
+
+.pagination { 
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.pageButton { 
+    padding: 8px 12px;
+    margin: 0 5px;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #fff;
+}
+
+.activePage { 
+    background-color: #f3f7fd;
+    font-weight: bold;
+}

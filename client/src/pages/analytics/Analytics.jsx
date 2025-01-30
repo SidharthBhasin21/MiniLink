@@ -6,19 +6,27 @@ export const Analytics = () => {
   const baseUrl = import.meta.env.VITE_BASEURL;
 
   const [analytics, setAnalytics] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   const handleSortByStatus = () => {}
   const handleSortByDate = () => {}
 
-  const loadAnalytics = async () => {
-    const data = await getAnalytics()
-    setAnalytics(data?.analytics)
-    console.log(data?.analytics)
+  const loadAnalytics = async (page = 1) => {
+    const data = await getAnalytics(page);
+    setAnalytics(data?.analytics);
+    setTotalPages(data?.pagination.totalPages);
+    console.log(data?.analytics);
   }
 
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    loadAnalytics(page);
+  };
+
   useEffect(() => {
-    loadAnalytics()
-  },[])  
+    loadAnalytics(currentPage);
+  }, [currentPage]);
 
   return (
     <div className={styles.analytics}>
@@ -44,8 +52,8 @@ export const Analytics = () => {
               </thead>
               <tbody>
                 {
-                  analytics.map((row)=>(
-                    <tr key={row.shortUrl}>
+                  analytics.map((row, index)=>(
+                    <tr key={row.timestamp+ index}>
                       <td>{row.timestamp}</td>
                       <td>{row.destinationUrl.slice(0,25)+'...'}</td>
                       <td>
@@ -60,6 +68,17 @@ export const Analytics = () => {
                   
               </tbody>
             </table>
+      <div className={styles.pagination}>
+        {Array.from({ length: totalPages }, (_, index) => (
+          <button
+            key={index}
+            className={`${styles.pageButton} ${currentPage === index + 1 ? styles.activePage : ''}`}
+            onClick={() => handlePageChange(index + 1)}
+          >
+            {index + 1}
+          </button>
+        ))}
+      </div>
     </div>
   );
 };
