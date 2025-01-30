@@ -1,11 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const {isLoggedIn} = require('../middlewares/isLoggedIn');
-const { createUrl, editUrl, deleteUrl, getAllUrls, redirectToOriginalUrl, dashboard, getAllAnalytics } = require('../controllers/urlController');
+const { createUrl, editUrl, deleteUrl, getAllUrls, redirectToOriginalUrl, dashboard, getAllAnalytics, getSearchUrl } = require('../controllers/urlController');
 
 router.get('/all', isLoggedIn, getAllUrls)
 router.get("/dashboard",isLoggedIn, dashboard)
 router.get("/analytics", isLoggedIn, getAllAnalytics);
+router.get("/search/:searchQuery", isLoggedIn, getSearchUrl)
 router.get("/:shortUrl", redirectToOriginalUrl);
 
 

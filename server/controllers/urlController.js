@@ -319,4 +319,8 @@ module.exports.getAllAnalytics = async (req, res) => {
     }
 };
 
+module.exports.getSearchUrl = async (req, res) => {
+    
+}
+
 
