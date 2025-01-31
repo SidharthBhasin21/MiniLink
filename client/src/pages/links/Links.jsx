@@ -14,22 +14,21 @@ const Links = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
-  const [selectedLink, setSelectedLink] = useState(null); // Added this line
-  const [currentPage, setCurrentPage] = useState(1); // Added this line
-  const [totalPages, setTotalPages] = useState(1); // Added this line
+  const [selectedLink, setSelectedLink] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1); 
+  const [totalPages, setTotalPages] = useState(1); 
 
   const getLinks = async (page = 1) => {
-    // Modified this function
     const data = await getAllLinks(page);
     setLinks(data?.data?.data.urls);
-    setTotalPages(data?.data?.data.pagination.totalPages); // Set total pages
+    setTotalPages(data?.data?.data.pagination.totalPages); 
     console.log(data.data.data.urls);
   };
 
   const deleteUrl = async (id) => {
     const data = await deleteLink(id);
     console.log(data);
-    getLinks(currentPage); // Refresh the links after deletion
+    getLinks(currentPage); 
   };
 
   const handleSortByDate = () => {};
@@ -42,8 +41,7 @@ const Links = () => {
   };
 
   const handleEditClick = (row) => {
-    // Modified this function
-    setSelectedLink(row); // Set the selected link
+    setSelectedLink(row); 
     toggleDrawer();
   };
 
@@ -63,7 +61,6 @@ const Links = () => {
   };
 
   const handlePageChange = (page) => {
-    // Modified this function
     setCurrentPage(page);
     getLinks(page);
   };
@@ -109,7 +106,9 @@ const Links = () => {
           </tr>
         </thead>
         <tbody>
-          {links?.map((row, index) => (
+          {
+            links.length?
+          links?.map((row, index) => (
             <tr key={row._id}>
               <td>{row.createdAt.toString().split("T")[0]}</td>
               <td>{row.destinationUrl.slice(0, 25)}</td>
@@ -136,13 +135,13 @@ const Links = () => {
               <td>
                 <button
                   className={styles.editBtn}
-                  onClick={() => handleEditClick(row)} // Modified this line
+                  onClick={() => handleEditClick(row)} 
                 >
                   <img src="/edit.png" alt="edit" className={styles.editIcon} />
                 </button>
                 <button
                   className={styles.deleteBtn}
-                  onClick={() => handleDeleteClick(row._id)} // Modified this line
+                  onClick={() => handleDeleteClick(row._id)} 
                 >
                   <img
                     src="/bin.png"
@@ -152,13 +151,15 @@ const Links = () => {
                 </button>
               </td>
             </tr>
-          ))}
+          )):
+          <tr>
+            <td colSpan="7">No data found</td>
+          </tr>
+        }
         </tbody>
       </table>
 
       <div className={styles.pagination}>
-        {" "}
-        {/* Added this block */}
         {Array.from({ length: totalPages }, (_, index) => (
           <button
             key={index}

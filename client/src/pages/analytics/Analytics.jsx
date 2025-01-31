@@ -57,7 +57,7 @@ export const Analytics = () => {
               </thead>
               <tbody>
                 {
-                  analytics? 
+                  analytics.length ? 
                   analytics.map((row, index)=>(
                     <tr key={row.timestamp+ index}>
                       <td>{row.timestamp}</td>
