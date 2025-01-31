@@ -11,8 +11,14 @@ const device = require('express-device');
 const userRouter = require("./routes/userRouter")
 const urlRouter = require("./routes/urlRouter")
 
+app.set('trust proxy', 1);
+
+const allowedOrigins = process.env.NODE_ENV === 'production' 
+  ? ['https://mini-link-gilt.vercel.app'] 
+  : ['http://localhost:5173'];
+
 app.use(cors({
-    origin: ['http://localhost:5173', 'https://mini-link-gilt.vercel.app'],
+    origin: allowedOrigins,
     credentials: true,
 }));
 app.use(express.json());
