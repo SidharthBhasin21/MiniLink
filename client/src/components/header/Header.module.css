@@ -48,3 +48,22 @@
     justify-content: center;
     align-items: center;
 }
+.logout {
+    position: absolute;
+    right: 1rem;
+    top: 5rem;
+    background-color: white;
+    border: 1px solid #E5E5E5;
+    border-radius: 6px;
+    width: 150px;
+    cursor: pointer;
+    z-index: 1000;
+}
+.logout button {
+    padding: 0.5rem 1rem;
+    border: none;
+    background-color: #e5e5e5;
+    cursor: pointer;
+    width: 100%;
+    border-radius: 6px;
+}

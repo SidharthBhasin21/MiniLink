@@ -13,6 +13,7 @@ const Header = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const [name, setName] = useState('')
   const [searchQuery, setSearchQueryLocal] = useState('');
+  const [islogoutOpen, setIsLogoutOpen] = useState(false)
 
   const dispatch = useDispatch();
   const navigation = useNavigate()
@@ -36,6 +37,11 @@ const Header = () => {
     const res =  await createLink(data)
     console.log(res)
     return res
+  }
+  const handleLogout = () => {
+    localStorage.removeItem('name')
+    localStorage.removeItem('token')
+    navigation('/auth')
   }
 
   const handleSearch = async (e) => { 
@@ -76,8 +82,14 @@ const Header = () => {
           value={searchQuery}
           onChange={handleSearch}
         />
-        <div className={styles.avatar}>{name ?  name.slice(0,2).toUpperCase(): ""}</div>
+        <div 
+          className={styles.avatar}
+          onClick={() => setIsLogoutOpen( prev => !prev)}
+        >{name ?  name.slice(0,2).toUpperCase(): ""}</div>
       </div>
+      {islogoutOpen && <div className={styles.logout}>
+        <button onClick={handleLogout}>Logout</button>
+      </div>}
       <Drawer 
         heading='New Link'
         toggleDrawer={toggleDrawer} 

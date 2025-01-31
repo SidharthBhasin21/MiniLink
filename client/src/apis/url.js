@@ -60,6 +60,7 @@ export const deleteLink = async (id) => {
             withCredentials: true,
         });
         const response = data.data;
+        console.log(data)
         if(response.status == "success"){
             toast.success(response.message)
             return response
@@ -104,7 +105,7 @@ export const getAnalytics = async (page = 1) => {
     } catch (error) {
         toast.error(error?.response?.data?.message)
         console.log(error)
-        return;
+        return [];
     }
 }
 

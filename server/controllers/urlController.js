@@ -294,7 +294,11 @@ module.exports.getAllAnalytics = async (req, res) => {
         }
 
         if (!urls.length) {
-            return res.status(404).json({ message: "No URLs found for the user." });
+            return res.status(404).json({
+                status: "error",
+                
+                message: "No URLs found for the user."
+            });
         }
 
         let analyticsData = [];

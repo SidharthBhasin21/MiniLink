@@ -13,10 +13,15 @@ export const Analytics = () => {
   const handleSortByDate = () => {}
 
   const loadAnalytics = async (page = 1) => {
-    const data = await getAnalytics(page);
-    setAnalytics(data?.analytics);
-    setTotalPages(data?.pagination.totalPages);
-    console.log(data?.analytics);
+    try{
+      const data = await getAnalytics(page);
+      setAnalytics(data?.analytics);
+      setTotalPages(data?.pagination.totalPages);
+      console.log(data?.analytics);
+    } catch (error) {
+      console.log(error);
+      setAnalytics([]);
+    }
   }
 
   const handlePageChange = (page) => {
@@ -52,6 +57,7 @@ export const Analytics = () => {
               </thead>
               <tbody>
                 {
+                  analytics? 
                   analytics.map((row, index)=>(
                     <tr key={row.timestamp+ index}>
                       <td>{row.timestamp}</td>
@@ -64,6 +70,10 @@ export const Analytics = () => {
                     
                   </tr>
                   ))
+                  :
+                  <tr>
+                    <td colSpan="5">No data found</td>
+                  </tr>
                 }
                   
               </tbody>
