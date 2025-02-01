@@ -11,9 +11,9 @@ const device = require('express-device');
 const userRouter = require("./routes/userRouter")
 const urlRouter = require("./routes/urlRouter")
 
-const allowedOrigins = process.env.NODE_ENV === 'production' 
-  ? ['https://mini-link-gilt.vercel.app'] 
-  : ['http://localhost:5173'];
+console.log("NODE_ENV:", process.env.NODE_ENV); 
+
+const allowedOrigins = ['https://mini-link-gilt.vercel.app','http://localhost:5173'];
 
 app.use(cors({
     origin: allowedOrigins,

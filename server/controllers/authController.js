@@ -38,12 +38,6 @@ module.exports.registerUser = async (req, res) => {
                     });
 
                     const token = generateToken(user);
-                    res.cookie('token', token, {
-                        httpOnly: true,
-                        secure: process.env.NODE_ENV === 'production', 
-                        sameSite: 'none', // Required for cross-origin requests
-                        maxAge: 24 * 60 * 60 * 1000, // 24 hours in milliseconds
-                    });
                     res.status(201).json({
                         status: 'success',
                         user,
@@ -64,6 +58,8 @@ module.exports.registerUser = async (req, res) => {
 }
 
 module.exports.loginUser = async (req, res) => {
+
+    console.log(req)
     try {
         const { email, password } = req.body;
 
@@ -80,14 +76,10 @@ module.exports.loginUser = async (req, res) => {
 
         }
         bcrypt.compare(password, user.password, async (err, result) => {
-
+            console.log(process.env.NODE_ENV)
             if (result) {
                 const token = generateToken(user);
-                res.cookie('token', token, {
-                    httpOnly: true,
-                    secure: process.env.NODE_ENV === 'production', 
-                    sameSite: 'None',
-                });
+                res.cookie('token', token);
                 res.json({
                     user,
                     message: 'User logged in successfully',
@@ -117,16 +109,17 @@ module.exports.logoutUser = async (req, res) => {
 
 
 module.exports.updateUser = async (req, res) => {
-    try {
 
+    try {
+        
         const userId = req.user._id;
         const { name, email, mobile} = req.body;
-        console.log(req.body)
         const userdata = await userModel.findOne({ _id: userId });
 
         if (userdata) {
             const updatedata = {};
             if (name) updatedata.name = name;
+            if (mobile) updatedata.mobile = mobile;
             if (email.length > 0) {
                 if (await userModel.findOne({ email: email })) {
                     return res.status(409).json({
@@ -137,21 +130,6 @@ module.exports.updateUser = async (req, res) => {
                 updatedata.email = email
             }
 
-            if (newPassword.length > 0) {
-                if (!await bcrypt.compare(oldPassword, userdata.password)) {
-                    return res.status(409).json({
-                        status: "error",
-                        message: "Your old password seems to be incorrect."
-                    })
-                }
-                if (await bcrypt.compare(oldPassword, userdata.password) == await bcrypt.compare(newPassword, userdata.password)) {
-                    return res.status(409).json({
-                        status: "error",
-                        message: "New password can not be same as old password."
-                    })
-                }
-                updatedata.password = await bcrypt.hash(newPassword, 10);
-            }
             console.log("update", updatedata)
             if (Object.keys(updatedata).length === 0) {
                 res.status(200).json({
