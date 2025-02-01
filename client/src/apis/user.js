@@ -10,7 +10,6 @@ export const userLoginApi = async (userData) => {
     try {
         const response = await axios.post(`${baseUrl}/auth/login`, userData, {
             withCredentials: true,
-            
         });
         console.log(response);
         if(response.status === 200) {

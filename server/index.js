@@ -12,8 +12,8 @@ const userRouter = require("./routes/userRouter")
 const urlRouter = require("./routes/urlRouter")
 
 console.log("NODE_ENV:", process.env.NODE_ENV); 
-
-const allowedOrigins = ['https://mini-link-gilt.vercel.app','http://localhost:5173'];
+app.set('trust proxy', 1);
+const allowedOrigins = ['https://mini-link-gilt.vercel.app/','http://localhost:5173'];
 
 app.use(cors({
     origin: allowedOrigins,

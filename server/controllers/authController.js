@@ -59,7 +59,7 @@ module.exports.registerUser = async (req, res) => {
 
 module.exports.loginUser = async (req, res) => {
 
-    console.log(req)
+    // console.log(req)
     try {
         const { email, password } = req.body;
 
@@ -79,7 +79,12 @@ module.exports.loginUser = async (req, res) => {
             console.log(process.env.NODE_ENV)
             if (result) {
                 const token = generateToken(user);
-                res.cookie('token', token);
+                res.cookie('token', token,{
+                    httpOnly: true,
+                    secure: process.env.NODE_ENV === 'production',
+                    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+                    maxAge: 7 * 24 * 60 * 60 * 1000,
+                });
                 res.json({
                     user,
                     message: 'User logged in successfully',
