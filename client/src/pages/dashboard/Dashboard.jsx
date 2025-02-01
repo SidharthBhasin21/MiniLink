@@ -31,6 +31,9 @@ const Dashboard = () => {
   const maxClicks = dateWiseClicks
   ? Math.max(...Object.values(dateWiseClicks), 0)
   : 0;
+
+  const maxDeviceClicks = Math.max(deviceTypeClicks.desktop, deviceTypeClicks.mobile, deviceTypeClicks.tablet, 0); // Added this line
+
   return (
     <main className={styles.dashboard}>
       <div className={styles.totalContainer}>Total clicks: {totalClicks}</div>
@@ -62,10 +65,21 @@ const Dashboard = () => {
         <div className={styles.dataContainer}>
           <h3>Click Devices</h3>
           <div className={styles.graphData}>
-                <div >Desktop: {deviceTypeClicks?.desktop}</div>
-                <div >Mobile: {deviceTypeClicks?.mobile}</div>
-                <div >Tablet: {deviceTypeClicks?.tablet}</div>
-              
+            <div className={styles.dateGraph}>
+              <div>Desktop</div>
+              <div className={styles.bar} style={{ width: `${(deviceTypeClicks.desktop / maxDeviceClicks) * 100}%`}}></div>
+              <div className={styles.dateClicks}>{deviceTypeClicks.desktop}</div>
+            </div>
+            <div className={styles.dateGraph}>
+              <div>Mobile</div>
+              <div className={styles.bar} style={{ width: `${(deviceTypeClicks.mobile / maxDeviceClicks) * 100}%`}}></div>
+              <div className={styles.dateClicks}>{deviceTypeClicks.mobile}</div>
+            </div>
+            <div className={styles.dateGraph}>
+              <div>Tablet</div>
+              <div className={styles.bar} style={{ width: `${(deviceTypeClicks.tablet / maxDeviceClicks) * 100}%`}}></div>
+              <div className={styles.dateClicks}>{deviceTypeClicks.tablet}</div>
+            </div>
           </div>
         </div>
       </div>

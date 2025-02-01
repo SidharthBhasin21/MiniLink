@@ -5,7 +5,6 @@
 .left{
     width: 40%;
     height: 100%;
-    background-color: aqua;
 }
 .logo {
     position: absolute;
@@ -55,4 +54,18 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
+@media (max-width: 768px) {
+    .leftImg {
+        display: none;
+    }
+    .left {
+        width: 0;
+    }
+    .right {
+        width: 100%;
+    }
+    .formContainer {
+        width: 80%;
+    }
 }

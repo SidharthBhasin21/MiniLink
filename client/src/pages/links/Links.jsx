@@ -19,10 +19,14 @@ const Links = () => {
   const [totalPages, setTotalPages] = useState(1); 
 
   const getLinks = async (page = 1) => {
-    const data = await getAllLinks(page);
-    setLinks(data?.data?.data.urls);
-    setTotalPages(data?.data?.data.pagination.totalPages); 
-    console.log(data.data.data.urls);
+    try{
+      const data = await getAllLinks(page);
+      setLinks(data?.data?.data.urls);
+      setTotalPages(data?.data?.data.pagination.totalPages); 
+      console.log(data.data.data.urls);
+    } catch(error){
+      setLinks([])
+    }
   };
 
   const deleteUrl = async (id) => {
@@ -34,6 +38,7 @@ const Links = () => {
   const handleSortByDate = () => {};
 
   const handleSortByStatus = () => {};
+
 
   const handleDeleteClick = (id) => {
     setSelectedId(id);

@@ -55,3 +55,22 @@
     background-color: #f3f7fd;
     font-weight: bold;
 }
+@media (max-width: 768px) {
+
+    .table th,
+    .table td {
+            text-align: center;
+            padding-inline: 12px;
+            padding-block: 6px;
+            border-bottom: 1px solid #e0e0e0;
+    }
+    .table th {
+        background-color: #F3F7FD;
+        font-weight: 800;
+        font-size: 0.8rem;
+    }
+    .table th img {
+        display: none;
+    }
+    
+    }

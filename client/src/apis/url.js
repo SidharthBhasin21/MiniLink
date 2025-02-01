@@ -34,7 +34,7 @@ export const getAllLinks = async (page = 1) => {
     } catch (error) {
         toast.error(error?.response?.data?.message)
         console.log(error)
-        return;
+        return [];
     }
 }
 

@@ -67,3 +67,25 @@
     width: 100%;
     border-radius: 6px;
 }
+@media (max-width: 768px) {
+    .header{
+        flex-direction: column;
+        padding: 1rem;
+        width: 100%;
+    }
+    .greeting p{
+        text-align: center;
+    }
+    .avatar {
+        position: absolute;
+        top: 0.7rem;
+        right: 0.7rem;
+        width: 30px;
+        height: 30px;
+        font-size: 8px;
+    }
+    .headerFunc {
+        margin-top: 0.8rem;
+    }
+    
+}
