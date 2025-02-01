@@ -3,6 +3,7 @@ const userModel = require("../models/userModel");
 
 
 module.exports.isLoggedIn = async (req, res, next) => {
+    console.log("Received Cookies:",{ ...req.cookies});
     if(!req.cookies.token){
         return res.status(401).json({
             status: 'error',
