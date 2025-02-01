@@ -7,7 +7,7 @@ const { generateToken } = require('../utils/generateToken');
 module.exports.registerUser = async (req, res) => {
     try {
         let { email, name, mobile, password } = req.body;
-        console.log(req.body)
+        // console.log(req.body)
         if (!email || !name || !password || !mobile) {
             return res.status(400).json({
                 status: 'error',
@@ -49,7 +49,7 @@ module.exports.registerUser = async (req, res) => {
         })
 
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         res.status(404).json({
             status: 'error',
             message: error.message
