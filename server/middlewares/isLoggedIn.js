@@ -3,8 +3,9 @@ const userModel = require("../models/userModel");
 
 
 module.exports.isLoggedIn = async (req, res, next) => {
-    console.log("Received Cookies:",{ ...req.cookies});
-    if(!req.cookies.token){
+
+    const token = req.header('Authorization');
+    if(!token){
         return res.status(401).json({
             status: 'error',
             message: 'Please login to access this page'
@@ -12,7 +13,7 @@ module.exports.isLoggedIn = async (req, res, next) => {
     }
 
     try {
-        const decoded = jwt.verify(req.cookies.token, process.env.JWT_KEY);
+        const decoded = jwt.verify(token.split(' ')[1], process.env.JWT_KEY);
         // console.log(decoded);
         let user = await userModel.findOne({email: decoded.email}).select('-password');
         req.user = user;

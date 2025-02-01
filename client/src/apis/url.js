@@ -8,6 +8,10 @@ export const createLink = async (data) => {
     try {
         const response = await axios.post(`${baseUrl}/url/shorten`, data, {
             withCredentials: true,
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
         });
         if(response.data.status == "success"){
             toast.success(response.data.message)
@@ -27,6 +31,10 @@ export const getAllLinks = async (page = 1) => {
     try {
         const data = await axios.get(`${baseUrl}/url/all?page=${page}`, {
             withCredentials: true,
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
         });
         console.log(data);
         return data;
@@ -42,6 +50,10 @@ export const getDashboard = async ()=> {
     try {
         const data = await axios.get(`${baseUrl}/url/dashboard`,{
             withCredentials: true,
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
         })
         // console.log(data)
         if(data.status === 200){
@@ -58,6 +70,10 @@ export const deleteLink = async (id) => {
     try {
         const data = await axios.delete(`${baseUrl}/url/delete/${id}`, {
             withCredentials: true,
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
         });
         const response = data.data;
         console.log(data)
@@ -79,6 +95,10 @@ export const editLink = async (id, data) => {
     try {
         const response = await axios.put(`${baseUrl}/url/edit/${id}`, data, {
             withCredentials: true,
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
         });
         if(response.data.status == "success"){
             toast.success(response.data.message)
@@ -98,6 +118,10 @@ export const getAnalytics = async (page = 1) => {
     try {
         const data = await axios.get(`${baseUrl}/url/analytics?page=${page}`, {
             withCredentials: true,
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
         });
         console.log(data);
         return data.data;
@@ -113,6 +137,10 @@ export const searchUrl = async (searchQuery) => {
     try {
         const response = await axios.get(`${baseUrl}/url/search/${searchQuery}`, {
             withCredentials: true,
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
         });
         if(response.data.status == "success"){
             return response.data.data;
