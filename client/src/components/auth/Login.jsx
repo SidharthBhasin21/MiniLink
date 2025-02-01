@@ -27,6 +27,7 @@ const Login = ({handlesignup}) => {
     if(token) {
       navigate('/')
       localStorage.setItem("name",user.name)
+      localStorage.setItem("email",user.email)
     }
   }
   

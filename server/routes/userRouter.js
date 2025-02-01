@@ -11,7 +11,7 @@ router.post('/login', loginUser)
 router.delete("/delete", isLoggedIn, deleteAccount );
 
 
-// router.post('/update', isLoggedIn, updateUser);
+router.post('/update', isLoggedIn, updateUser);
 
 
 

@@ -120,7 +120,8 @@ module.exports.updateUser = async (req, res) => {
     try {
 
         const userId = req.user._id;
-        const { name, email, oldPassword, newPassword } = req.body;
+        const { name, email, mobile} = req.body;
+        console.log(req.body)
         const userdata = await userModel.findOne({ _id: userId });
 
         if (userdata) {

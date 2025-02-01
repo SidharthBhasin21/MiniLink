@@ -20,7 +20,7 @@ export const userLoginApi = async (userData) => {
             toast.success( `Welcome! ${response.data.user.name}`);    
             return {token, user};
         } else {
-            toast.error('somthing went wrong'); 
+            toast.error('Something went wrong'); 
         }
         
     } catch (error) {
@@ -28,7 +28,7 @@ export const userLoginApi = async (userData) => {
             toast.error(error.response.data.message);
         }  else  {
             console.log(error);
-            toast.error('somthing went wrong');
+            toast.error('Something went wrong');
         }
         return null;
     }
@@ -59,6 +59,12 @@ export const userUpdate = async (userData) => {
         const { status, message } = response.data;
         if (status === 'success') {
             toast.success(message);
+            if (userData.email) {
+                // If email is updated, log out the user
+                localStorage.removeItem('token');
+                localStorage.removeItem('name');
+                window.location.href = '/auth'; // Redirect to login page
+            }
             return true;
         } else {
             toast.error(message);
