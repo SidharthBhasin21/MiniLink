@@ -115,7 +115,7 @@ const Links = () => {
             links.length?
           links?.map((row, index) => (
             <tr key={row._id}>
-              <td>{row.createdAt.toString().split("T")[0]}</td>
+              <td>{new Date(row.createdAt).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</td>
               <td>{row.destinationUrl.slice(0, 25)}</td>
               <td>
                 {`${baseUrl}/url/${row.shortUrl}`.slice(0, 12)}
